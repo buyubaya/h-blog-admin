@@ -6,10 +6,12 @@ const keys = require('../config/keys');
 const User = mongoose.model('User');
 
 passport.serializeUser((user, done) => {
+  console.log('S', user);
   done(null, user.id);
 });
 
 passport.deserializeUser((id, done) => {
+  console.log('D', id);
   User.findById(id).then(user => {
     done(null, user);
   });
@@ -33,6 +35,7 @@ passport.use(
           googleId: profile.id,
           displayName: profile.displayName
         }).save();
+        // SERIALIZE USER
         done(null, user);
       } catch (err) {
         done(err, null);
