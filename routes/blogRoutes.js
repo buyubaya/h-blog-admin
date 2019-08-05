@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const requireLogin = require('../middlewares/requireLogin');
-
+const redisClient = require('./cache');
 const Blog = mongoose.model('Blog');
 
 module.exports = app => {
@@ -14,7 +14,9 @@ module.exports = app => {
 	});
 
 	app.get('/api/blogs', requireLogin, async (req, res) => {
-		const blogs = await Blog.find({ _user: req.user.id });
+		const blogs = await Blog
+		.find({ _user: req.user.id })
+		.cache({ key: 'test' });
 
 		res.send(blogs);
 	});
@@ -30,6 +32,7 @@ module.exports = app => {
 
 		try {
 			await blog.save();
+			await redisClient.del('test');
 			res.send(blog);
 		} catch (err) {
 			res.send(400, err);
@@ -38,7 +41,10 @@ module.exports = app => {
 
 	app.delete('/api/blogs/:id', requireLogin, async (req, res) => {
 		Blog.findByIdAndRemove(req.params.id)
-		.then(res => console.log('DELETE SUCCESS'))
+		.then(async res => {
+			await redisClient.del('test');
+			console.log('DELETE SUCCESS');
+		})
 		.catch(err => console.log('DELETE ERROR', err));
 	});
 };

@@ -8,29 +8,32 @@ import Landing from './Landing';
 import Dashboard from './Dashboard';
 import BlogNew from './blogs/BlogNew';
 import BlogShow from './blogs/BlogShow';
+import Sample from './Sample';
+
 
 class App extends Component {
-  componentDidMount() {
-    this.props.fetchUser();
-  }
+	componentDidMount() {
+		this.props.fetchUser();
+	}
 
-  render() {
-    return (
-      <div className="container">
-        <BrowserRouter>
-          <div>
-            <Header />
-            <Switch>
-              <Route path="/blogs/new" component={BlogNew} />
-              <Route exact path="/blogs/:_id" component={BlogShow} />
-              <Route path="/blogs" component={Dashboard} />
-              <Route path="/" component={Landing} />
-            </Switch>
-          </div>
-        </BrowserRouter>
-      </div>
-    );
-  }
+	render() {
+		return (
+			<div className="container">
+				<BrowserRouter>
+					<div>
+						<Header />
+						<Switch>
+							<Route path="/blogs/new" component={BlogNew} />
+							<Route exact path="/blogs/:_id" component={BlogShow} />
+							<Route path="/blogs" component={Dashboard} />
+							<Route path='/sample' component={Sample} />
+							<Route path="/" component={Landing} />
+						</Switch>
+					</div>
+				</BrowserRouter>
+			</div>
+		);
+	}
 }
 
 export default connect(null, actions)(App);
